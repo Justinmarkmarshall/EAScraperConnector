@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EAScraperConnector", "EAScraperConnector\EAScraperConnector.csproj", "{ABE0D282-F827-44FC-AC76-0C2B956CEC8D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EAScraperConnector.Tests", "EAScraperConnector.Tests\EAScraperConnector.Tests.csproj", "{C4318940-7A4B-418F-A08B-C5FE460D8111}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ABE0D282-F827-44FC-AC76-0C2B956CEC8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABE0D282-F827-44FC-AC76-0C2B956CEC8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABE0D282-F827-44FC-AC76-0C2B956CEC8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABE0D282-F827-44FC-AC76-0C2B956CEC8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4318940-7A4B-418F-A08B-C5FE460D8111}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4318940-7A4B-418F-A08B-C5FE460D8111}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4318940-7A4B-418F-A08B-C5FE460D8111}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4318940-7A4B-418F-A08B-C5FE460D8111}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8413788C-11F9-49FF-BF99-FEF34578793D}
+	EndGlobalSection
+EndGlobal
