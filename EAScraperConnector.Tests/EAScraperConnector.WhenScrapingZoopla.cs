@@ -1,5 +1,6 @@
 ﻿using AngleSharp.Dom;
 using AngleSharp.Io;
+using EAScraperConnector.Dtos;
 using EAScraperConnector.Interfaces;
 using EAScraperConnector.Scrapers;
 using Microsoft.Extensions.Logging;
@@ -15,12 +16,14 @@ using System.Threading.Tasks;
 
 namespace EAScraperConnector.Tests
 {
+
     public class WhenScrapingZoopla
     {
         Mock<IAngleSharpWrapper>? _angleSharpWrapper;
         AngleSharpWrapper? _angleSharpWrap;
         ZooplaScraper? _zoopla;
         Mock<ILogger<ZooplaScraper>>? _logger;
+        Mock<IAuditWrapper>? _auditWrapper;
         RightMoveScraper? _rightMove;
 
         [SetUp]
@@ -29,12 +32,13 @@ namespace EAScraperConnector.Tests
             _angleSharpWrapper = new Mock<IAngleSharpWrapper>();
             _angleSharpWrap = new AngleSharpWrapper();
             _logger = new Mock<ILogger<ZooplaScraper>>();
-            _zoopla = new ZooplaScraper(_angleSharpWrapper.Object, _logger.Object);
+            _auditWrapper = new Mock<IAuditWrapper>();
+            _zoopla = new ZooplaScraper(_angleSharpWrapper.Object, _logger.Object, _auditWrapper.Object);
             _rightMove = new RightMoveScraper(_angleSharpWrapper.Object);
         }
 
         [Test]
-        public async Task WhenScrapingZooplaShouldPopulateHouse()
+        public async Task WhenScrapingZooplaShouldPopulateHouseAndLogToAudit()
         {
             var fakeElement = await GetFakeDocument(Enums.EstateAgent.Zoopla);
             _angleSharpWrapper?.Setup(r => r.GetSearchResults(It.IsAny<string>(), It.IsAny<RequesterWrapper>())).ReturnsAsync(fakeElement);
@@ -46,6 +50,7 @@ namespace EAScraperConnector.Tests
             Assert.IsNotNull(zoo.Select(r => r.Price));
             Assert.IsNotNull(zoo.Select(r => r.MonthlyRepayments));
             Assert.IsNotNull(zoo.Select(r => r.Deposit));
+            Mock.Get(_auditWrapper.Object).Verify(x => x.SaveToDB(It.IsAny<Audit>()), Times.AtLeastOnce);
         }
 
         [Test]
@@ -101,7 +106,8 @@ namespace EAScraperConnector.Tests
             {
                 return new MemoryStream();
             }
-            
+
         }
     }
+
 }
