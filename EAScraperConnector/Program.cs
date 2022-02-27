@@ -20,7 +20,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IZooplaScraper, ZooplaScraper>();
 builder.Services.AddSingleton<IAngleSharpWrapper, AngleSharpWrapper>();
 builder.Services.AddSingleton<IExcelSaver, ExcelSaver>();
-builder.Services.AddSingleton<IRightMoveScraper, RightMoveScraper>();
+builder.Services.AddTransient<IRightMoveScraper, RightMoveScraper>();
 builder.Services.AddTransient<IEFWrapper, EFWrapper>();
 builder.Services.AddTransient<IAuditWrapper, AuditWrapper>();
 

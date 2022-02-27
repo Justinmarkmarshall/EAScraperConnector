@@ -5,7 +5,7 @@ namespace EAScraperConnector.Mappers
 {
     public static class ZooplaMapper
     {
-        public static List<House> Map(this IHtmlCollection<IElement> searchResult)
+        public static List<House> MapZ(this IHtmlCollection<IElement> searchResult)
         {
             var lstReturn = new List<House>();
 

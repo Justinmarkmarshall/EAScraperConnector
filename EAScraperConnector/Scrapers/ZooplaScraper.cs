@@ -11,7 +11,7 @@ namespace EAScraperConnector.Scrapers
     //div class with listing containers css-1anhqz4-ListingsContainer earci3d2
     //div class for individual search results search-result_listing_60796732
     //parentNode children html has the juice
-    //private const string zooplaUrl = "https://www.zoopla.co.uk/for-sale/flats/ealing-common/?is_auction=false&is_shared_ownership=false&page_size=25&price_max=150000&view_type=list&q=Ealing%20Common&radius=10&results_sort=newest_listings&search_source=facets";
+    //private const string zooplaUrl = "https://www.zoopla.co.uk/for-sale/flats/ealing-common/?is_auction=false&is_shared_ownership=false&page_size=25&Londonprice_max=150000&view_type=list&q=Ealing%20Common&radius=10&results_sort=newest_listings&search_source=facets";
     public class ZooplaScraper : IZooplaScraper
     {
         private Dictionary<string, string> _affordablePostCodes = new Dictionary<string, string>()
@@ -25,7 +25,7 @@ namespace EAScraperConnector.Scrapers
             { "East Ham", "E12" },
             { "Plumstead", "SE18" },
             { "Anerley", "SE20" },
-            { "Penge", "BR23" },
+            { "Penge", "BR3" },
             { "Plaistow", "E13" },
             { "Peterborough", "PE1" },
             { "Purfleet", "RM19" },
@@ -35,7 +35,8 @@ namespace EAScraperConnector.Scrapers
             { "Hatfield", "AL10" },
             { "Reading", "RG1" },
             { "Borehamwood", "WD6" },
-            { "Iver", "SL0" }
+            { "Iver", "SL0" },
+            { "Acton", "W3" }
         };
 
         IAngleSharpWrapper _angleSharpWrapper;
@@ -61,9 +62,8 @@ namespace EAScraperConnector.Scrapers
                 var document = await _angleSharpWrapper.GetSearchResults(url);
                 var searchResults = document.GetElementsByClassName("css-1anhqz4-ListingsContainer earci3d2");
                 if (searchResults.Any())
-                {
-                    
-                    var newHomes = searchResults.Map();
+                {                   
+                    var newHomes = searchResults.MapZ();
                     foreach (var home in newHomes)
                     {
                         if (!uniqueHouses.Any(r => r.Link == home.Link)) {
@@ -72,7 +72,7 @@ namespace EAScraperConnector.Scrapers
                                 };
                     }
                 }
-                await _auditWrapper.SaveToDB(postCodeCounter.Map(location.Value, price));                
+                await _auditWrapper.SaveToDB(postCodeCounter.Map(location.Value, price, Enums.EstateAgent.Zoopla));                
             }
             
             return uniqueHouses;

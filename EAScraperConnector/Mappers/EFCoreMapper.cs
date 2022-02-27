@@ -25,11 +25,11 @@ namespace EAScraperConnector.Mappers
         }
 
         public static Audit Map(this int postCodeCounter, string postcode, 
-            string price)
+            string price, Enums.EstateAgent site)
         {
             return new Audit()
             {
-                Site = 1,
+                Site = (int)site,
                 Postcode = postcode,
                 UniqueResultsCount = postCodeCounter,
                 Price = Convert.ToInt32(price),

@@ -34,7 +34,7 @@ namespace EAScraperConnector.Tests
             _logger = new Mock<ILogger<ZooplaScraper>>();
             _auditWrapper = new Mock<IAuditWrapper>();
             _zoopla = new ZooplaScraper(_angleSharpWrapper.Object, _logger.Object, _auditWrapper.Object);
-            _rightMove = new RightMoveScraper(_angleSharpWrapper.Object);
+            _rightMove = new RightMoveScraper(_angleSharpWrapper.Object, _auditWrapper.Object);
         }
 
         [Test]

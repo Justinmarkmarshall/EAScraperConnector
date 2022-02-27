@@ -26,7 +26,13 @@ namespace EAScraperConnector.Controllers
         [HttpGet(Name = "GetProperties")]
         public async Task<IEnumerable<House>> Get(string price)
         {
-            var results = await _zooplaScraper.GetProperties(price);
+            var rmResults = await _rightMoveScraper.GetProperties(price);
+            var zoopResults = await _zooplaScraper.GetProperties(price);
+
+            var results = new List<House>();
+            results.AddRange(rmResults);
+            results.AddRange(zoopResults);
+
             if (results.Any())
             {
                 var uniqueResults = await RemoveDuplicates(results.ToList());
