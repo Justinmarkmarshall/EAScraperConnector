@@ -72,9 +72,9 @@ namespace EAScraperConnector.Scrapers
                                 };
                     }
                 }
-                await _auditWrapper.SaveToDB(postCodeCounter.Map(location.Value, price, Enums.EstateAgent.Zoopla));                
+                await _auditWrapper.SaveToDB(postCodeCounter.Map(location.Value, price, Enums.EstateAgent.Zoopla));
             }
-            
+
             return uniqueHouses;
         }
 

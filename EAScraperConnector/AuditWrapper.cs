@@ -6,7 +6,6 @@ namespace EAScraperConnector
     public class AuditWrapper : IAuditWrapper
     {
         private DataContext _context;
-
         public AuditWrapper(DataContext context)
         {
             _context = context;
@@ -14,8 +13,15 @@ namespace EAScraperConnector
 
         public async Task SaveToDB(Audit audit)
         {
-            await _context.AddAsync(audit);
-            await _context.SaveChangesAsync(); 
+            try
+            {
+                await _context.AddAsync(audit);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
     }
 }

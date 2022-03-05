@@ -30,9 +30,9 @@ namespace EAScraperConnector
             return await _context.Properties.ToListAsync();
         }
 
-        public async Task SaveToDB(List<Audit> audit)
+        public async Task SaveToDB(Audit audit)
         {
-            await _context.AddRangeAsync(audit);
+            await _context.AddAsync(audit);
             await _context.SaveChangesAsync();
         }
 

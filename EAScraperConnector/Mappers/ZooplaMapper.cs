@@ -33,21 +33,24 @@ namespace EAScraperConnector.Mappers
                         Price = prce[0].InnerHtml,
                         Area = address[0].InnerHtml,
                         Link = $"https://www.zoopla.co.uk/for-sale/details/{pid}",
-                        MonthlyRepayments = CalculateMonthlyRepayment(prce[0].InnerHtml.Replace("£", "").Replace(",", "")),
-                        Deposit = Calculate10PcOfPrice(prce[0].InnerHtml.Remove(0, 1).Replace("£", "").Replace(",", ""))
+                        //MonthlyRepayments = CalculateMonthlyRepayment(prce[0].InnerHtml.Replace("£", "").Replace(",", "")),
+                        MonthlyRepayments = 0,
+                        //Deposit = Calculate10PcOfPrice(prce[0].InnerHtml.Remove(0, 1).Replace("£", "").Replace(",", ""))
+                        Deposit = 0
                     });
             }
             return lstReturn;
         }
 
+        //was blowing up with 179999
         private static int Calculate10PcOfPrice(string innerHtml) => Convert.ToInt32(innerHtml) / 10;
 
         private static int CalculateMonthlyRepayment(string price)
         {
             var prx = Convert.ToInt32(price);
-            return prx / 236;
+            return Convert.ToInt32(Math.Floor(prx / 236M));
         }
-
+        
         private static int Calculate10PcOffPrice(int price) => price - (price / 100 * 10);
     }
 }

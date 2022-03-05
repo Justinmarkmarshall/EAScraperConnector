@@ -11,14 +11,24 @@ namespace EAScraperConnector.Mappers
 
             foreach (var house in houses)
             {
-                properties.Add(new Property()
+                try
+                { 
+                    var prx = Double.TryParse(house.Price.Replace("£", "").Replace(",", ""), out var price) ? price : 0;
+
+                    //price POA causes the price to break
+                    properties.Add(new Property()
+                    {
+                        Description = $"{ DateTime.Now.ToString()}{ house.Description}",
+                        Price = prx,
+                        Area = String.IsNullOrEmpty(house.Area) ? "" : house.Area,
+                        Link = house.Link,
+                        Deposit = house.Deposit
+                    });
+                }
+                catch (Exception ex)
                 {
-                    Description = $"{ DateTime.Now.ToString()}{ house.Description}",
-                    Price = Convert.ToDouble(house.Price.Replace("£", "")),
-                    Area = String.IsNullOrEmpty(house.Area) ? "" : house.Area,
-                    Link = house.Link,
-                    Deposit = house.Deposit
-                });
+
+                }
             }
 
             return properties;
