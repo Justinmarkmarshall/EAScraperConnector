@@ -23,6 +23,10 @@ builder.Services.AddSingleton<IExcelSaver, ExcelSaver>();
 builder.Services.AddTransient<IRightMoveScraper, RightMoveScraper>();
 builder.Services.AddTransient<IEFWrapper, EFWrapper>();
 builder.Services.AddTransient<IAuditWrapper, AuditWrapper>();
+//builder.Services.AddSwaggerGen(c =>
+//{
+//    c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+//});
 
 var app = builder.Build();
 

@@ -40,5 +40,10 @@ namespace EAScraperConnector
         {
             return await _context.Audit.ToListAsync();
         }
+
+        public async Task<List<Property>> GetByPrice(double price)
+        {
+            return await _context.Properties.Where(r => r.Price < price && r.Price > price - 12000).ToListAsync();
+        }
     }
 }
