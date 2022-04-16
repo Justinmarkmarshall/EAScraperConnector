@@ -1,5 +1,6 @@
 ﻿using EAScraperConnector.Dtos;
 using Microsoft.EntityFrameworkCore;
+//using System.Data.Entity;
 
 namespace EAScraperConnector.Data
 {
@@ -10,5 +11,6 @@ namespace EAScraperConnector.Data
         public DbSet<Property> Properties { get; set; }
 
         public DbSet<Audit> Audit { get; set; }
+        public DbSet<Log> Log { get; set; }
     }
 }

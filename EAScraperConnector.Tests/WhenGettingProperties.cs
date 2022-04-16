@@ -69,7 +69,7 @@ namespace EAScraperConnector.Tests
             var price = "150000";
             var link = "123456";
             Given_search_request_with(price, link);
-            existing_db_entries_with(link);
+            Existing_db_entries_with(link);
             await _eaScraperController.Get(price);
             Mock.Get(_efWrapper.Object).Verify(x => x.SaveToDB(It.IsAny<List<Property>>()), Times.Never);
         }
@@ -93,7 +93,7 @@ namespace EAScraperConnector.Tests
             _efWrapper.Setup(x => x.GetFromDB()).ReturnsAsync(dbProperties);
         }
 
-        private void existing_db_entries_with(string link)
+        private void Existing_db_entries_with(string link)
         {
             var dbProperties = new List<Property>()
             {
@@ -117,6 +117,9 @@ namespace EAScraperConnector.Tests
                     new List<House>() { new House() { Price = price, Link = String.IsNullOrEmpty(link) ? "123456" : link},
                     new House() { Price = (Calculate10PcOffPrice(Convert.ToInt32(price))).ToString(), Link= String.IsNullOrEmpty(link) ? "567891" : link } });
 
+            _rightMoveScraper.Setup(r => r.GetProperties(It.IsAny<string>(), It.IsAny<bool>())).ReturnsAsync(
+                    new List<House>() { new House() { Price = price, Link = String.IsNullOrEmpty(link) ? "123456" : link},
+                    new House() { Price = (Calculate10PcOffPrice(Convert.ToInt32(price))).ToString(), Link= String.IsNullOrEmpty(link) ? "567891" : link } });
         }
 
 

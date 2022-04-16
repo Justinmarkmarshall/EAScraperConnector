@@ -8,11 +8,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="MockRMDocument.html" />
     <None Remove="MockSearchResults.html" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="MockSearchResults.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="MockRMDocument.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

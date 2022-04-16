@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 namespace EAScraperConnector.Tests
 {
 
-    public class WhenScrapingZoopla
+    public class WhenScraping
     {
         Mock<IAngleSharpWrapper>? _angleSharpWrapper;
         AngleSharpWrapper? _angleSharpWrap;
@@ -91,22 +91,14 @@ namespace EAScraperConnector.Tests
         {
             var doc = estateAgent == Enums.EstateAgent.RightMove ? "MockRMDocument.html" : "MockSearchResults.html";
 
-            try
+            using (FileStream fileStream = File.OpenRead(Path.Combine(Directory.GetCurrentDirectory(), $"{doc}")))
             {
-                using (FileStream fileStream = File.OpenRead(Path.Combine(Directory.GetCurrentDirectory(), $"{doc}")))
-                {
-                    MemoryStream memoryStream = new MemoryStream();
-                    memoryStream.SetLength(fileStream.Length);
-                    fileStream.Read(memoryStream.GetBuffer(), 0, (int)fileStream.Length);
+                MemoryStream memoryStream = new MemoryStream();
+                memoryStream.SetLength(fileStream.Length);
+                fileStream.Read(memoryStream.GetBuffer(), 0, (int)fileStream.Length);
 
-                    return memoryStream;
-                }
+                return memoryStream;
             }
-            catch (Exception ex)
-            {
-                return new MemoryStream();
-            }
-
         }
     }
 

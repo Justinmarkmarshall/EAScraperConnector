@@ -39,6 +39,20 @@ namespace EAScraperConnector.Scrapers
             { "W3", "5E2763" }
         };
 
+        private Dictionary<string, string> _londonPostCodes = new Dictionary<string, string>()
+        {
+            { "E6", "5E759" },
+            { "SE28", "5E2329" },
+            { "N9", "5E1687" },
+            { "SE2", "5E2320" },
+            { "SE25", "5E2326" },
+            { "E12", "5E747" },
+            { "SE18", "5E2318" },
+            { "SE20", "5E2321" },
+            { "E13", "5E748" },
+            { "W3", "5E2763" }
+        };
+
         public RightMoveScraper(IAngleSharpWrapper angleSharpWrapper, IAuditWrapper auditWrapper)
         {
             _angleSharpWrapper = angleSharpWrapper;
@@ -47,11 +61,13 @@ namespace EAScraperConnector.Scrapers
         //RIGHTMOVE HAVE A DIFFERENT LOCATION IDENTIFIER SYSTEM
 
 
-        public async Task<IList<House>> GetProperties(string price)
+        public async Task<IList<House>> GetProperties(string price, bool londonOnly=true)
         {
             var uniqueHouses = new List<House>();
 
-            foreach (var location in _affordablePostCodes)
+            var locations = londonOnly ? _londonPostCodes : _affordablePostCodes;
+
+            foreach (var location in locations)
             {
                 var postCodeCounter = 0;
                 string url = $"https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&locationIdentifier=OUTCODE%{location.Value}&insId=1&radius=10.0&minPrice={Calculate10PcOffPrice(Convert.ToInt32(price))}&maxPrice={price}&minBedrooms=0&maxBedrooms=1&displayPropertyType=flats&maxDaysSinceAdded=&_includeSSTC=on&sortByPriceDescending=&primaryDisplayPropertyType=&secondaryDisplayPropertyType=&oldDisplayPropertyType=&oldPrimaryDisplayPropertyType=&newHome=&auction=false";

@@ -17,9 +17,6 @@ namespace EAScraperConnector.Mappers
                     GetElementsByClassName("propertyCard-address")[0].GetElementsByTagName("span")[0].InnerHtml;
                 var pce = property.GetElementsByClassName("propertyCard-priceValue")[0].InnerHtml;
                 var aTags = property.QuerySelector("a").Id;
-                    //.OuterHtml.Split("=");
-
-
                 if (!allINeed.ToLower().Contains("hotel")
                     && !allINeed.ToLower().Contains("retirement")
                     && !allINeed.ToLower().Contains("investment only")
