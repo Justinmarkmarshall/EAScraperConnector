@@ -3,6 +3,7 @@ using AngleSharp.Html.Dom;
 using AngleSharp.Html.Parser;
 using EAScraperConnector.Interfaces;
 using EAScraperConnector.Mappers;
+using EAScraperConnector.Mappers.v2;
 using EAScraperConnector.Models;
 
 namespace EAScraperConnector.Scrapers
@@ -39,6 +40,17 @@ namespace EAScraperConnector.Scrapers
             { "Acton", "W3" }
         };
 
+        private Dictionary<string, string> _londonPostCodes = new Dictionary<string, string>()
+        {
+            { "Beckton", "E6" },
+            { "Thamesmead", "SE28" },
+            { "East Ham", "E12" },
+            { "UpperEdmonton", "N9" },
+            { "Plumstead", "SE18" },
+            { "Acton", "W3" }
+        };
+
+
         IAngleSharpWrapper _angleSharpWrapper;
         ILogger<ZooplaScraper> _logger;
         private readonly List<string> _locations = new List<string>() { "Ealing-Common", "London", "HP1", "E6", "SE28" };
@@ -51,19 +63,25 @@ namespace EAScraperConnector.Scrapers
             _auditWrapper = auditWrapper;
         }
 
-        public async Task<IList<House>> GetProperties(string price)
+        public async Task<IList<House>> GetProperties(string price, bool londonOnly = true, int version=1)
         {
             var uniqueHouses = new List<House>();
 
-            foreach (var location in _affordablePostCodes)
+            var locations = londonOnly ? _londonPostCodes : _affordablePostCodes;
+
+            foreach (var location in locations)
             {
                 var postCodeCounter = 0;
                 string url = $"https://www.zoopla.co.uk/for-sale/flats/{location.Value.ToLower()}/?is_auction=false&is_shared_ownership=false&page_size=25&price_max={price}&price_min={Calculate10PcOffPrice(Convert.ToInt32(price))}&view_type=list&q={location.Value.Replace("-", "%")}&radius=15&results_sort=newest_listings&search_source=facets";
                 var document = await _angleSharpWrapper.GetSearchResults(url);
-                var searchResults = document.GetElementsByClassName("css-1anhqz4-ListingsContainer earci3d2");
+
+                var searchResults = document.GetElementsByClassName("css-1anhqz4-ListingsContainer");
+  
+
                 if (searchResults.Any())
-                {                   
-                    var newHomes = searchResults.MapZ();
+                {
+                    var newHomes = new List<House>();
+                    newHomes = version == 1 ? searchResults.MapZ() : searchResults.v2MapZ();
                     foreach (var home in newHomes)
                     {
                         if (!uniqueHouses.Any(r => r.Link == home.Link)) {
