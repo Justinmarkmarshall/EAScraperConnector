@@ -50,6 +50,19 @@ namespace EAScraperConnector.Controllers
         }
 
         [HttpGet]
+        [Route("Scrape")]
+        public async Task<IEnumerable<House>> Scrape(string price)
+        {
+            var rmResults = await _rightMoveScraper.GetProperties(price);
+            //var zoopResults = await _zooplaScraper.GetProperties(price);
+
+            var results = new List<House>();
+            results.AddRange(rmResults);
+            //results.AddRange(zoopResults);
+            return results;
+        }
+
+        [HttpGet]
         [Route("Salary")]
         public async Task<IEnumerable<PropertySpec>> BySalary(int savings, int grossMonthlyIncome, int disposableIncome, int netMonthly)
         {

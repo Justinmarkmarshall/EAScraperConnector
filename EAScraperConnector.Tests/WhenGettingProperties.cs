@@ -117,7 +117,7 @@ namespace EAScraperConnector.Tests
                     new List<House>() { new House() { Price = price, Link = String.IsNullOrEmpty(link) ? "123456" : link},
                     new House() { Price = (Calculate10PcOffPrice(Convert.ToInt32(price))).ToString(), Link= String.IsNullOrEmpty(link) ? "567891" : link } });
 
-            _rightMoveScraper.Setup(r => r.GetProperties(It.IsAny<string>())).ReturnsAsync(
+            _rightMoveScraper.Setup(r => r.GetProperties(It.IsAny<string>(), It.IsAny<bool>())).ReturnsAsync(
                     new List<House>() { new House() { Price = price, Link = String.IsNullOrEmpty(link) ? "123456" : link},
                     new House() { Price = (Calculate10PcOffPrice(Convert.ToInt32(price))).ToString(), Link= String.IsNullOrEmpty(link) ? "567891" : link } });
         }
