@@ -15,5 +15,13 @@ namespace EAScraperConnector.Dtos
         public int Deposit { get; set; }
 
         public DateTime Date { get; set; } = DateTime.Now;
+
+        public string Images { get; set; } = String.Empty;
+        public string Postcode { get; set; } = String.Empty;
+
+        public int Site { get; set; }
+
+        public DateTime DateListed { get; set; }
+
     }
 }
