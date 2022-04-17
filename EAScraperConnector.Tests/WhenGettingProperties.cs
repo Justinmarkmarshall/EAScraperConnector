@@ -14,9 +14,9 @@ using System.Threading.Tasks;
 
 namespace EAScraperConnector.Tests
 {
-    public class WhenGettingProperties
+    public class WhenGettingProperties 
     {
-        Mock<IZooplaScraper>? _zooplaScraper;
+        protected Mock<IZooplaScraper>? _zooplaScraper;
         Mock<IExcelSaver>? _excelSaver;
         Mock<IEFWrapper>? _efWrapper;
         Mock<IRightMoveScraper>? _rightMoveScraper;
@@ -111,15 +111,16 @@ namespace EAScraperConnector.Tests
             _efWrapper.Setup(x => x.GetFromDB()).ReturnsAsync(dbProperties);
         }
 
-        private void Given_search_request_with(string price, string link="")
-        {
-            _zooplaScraper.Setup(r => r.GetProperties(It.IsAny<string>())).ReturnsAsync(
-                    new List<House>() { new House() { Price = price, Link = String.IsNullOrEmpty(link) ? "123456" : link},
-                    new House() { Price = (Calculate10PcOffPrice(Convert.ToInt32(price))).ToString(), Link= String.IsNullOrEmpty(link) ? "567891" : link } });
-
+        protected void Given_search_request_with(string price, string link="")
+        {            
             _rightMoveScraper.Setup(r => r.GetProperties(It.IsAny<string>(), It.IsAny<bool>())).ReturnsAsync(
                     new List<House>() { new House() { Price = price, Link = String.IsNullOrEmpty(link) ? "123456" : link},
                     new House() { Price = (Calculate10PcOffPrice(Convert.ToInt32(price))).ToString(), Link= String.IsNullOrEmpty(link) ? "567891" : link } });
+
+            _zooplaScraper.Setup(r => r.GetProperties(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<int>())).ReturnsAsync(
+                   new List<House>() { new House() { Price = price, Link = String.IsNullOrEmpty(link) ? "123456" : link},
+                    new House() { Price = (Calculate10PcOffPrice(Convert.ToInt32(price))).ToString(), Link= String.IsNullOrEmpty(link) ? "567891" : link } });
+
         }
 
 

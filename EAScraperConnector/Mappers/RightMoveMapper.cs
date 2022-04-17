@@ -1,35 +1,63 @@
 ﻿using AngleSharp.Dom;
+using AngleSharp.Html.Dom;
 using EAScraperConnector.Models;
 
 namespace EAScraperConnector.Mappers
 {
     public static class RightMoveMapper
     {
-        public static List<House> MapRM(this IHtmlCollection<IElement> searchResult)
+        public static List<House> MapRM(this IHtmlCollection<IElement> propertiesDiv)
         {
             var houses = new List<House>();
 
-            foreach (var property in searchResult[0].Children)
+           try
             {
-                var allINeed = property.InnerHtml;
+                foreach (var propertyCard in propertiesDiv[0].Children)
+                {
+                    //var description = propertyCard.GetElementsByClassName("property-information");
 
-                var address = property.GetElementsByClassName("propertyCard-details")[0].
-                    GetElementsByClassName("propertyCard-address")[0].GetElementsByTagName("span")[0].InnerHtml;
-                var pce = property.GetElementsByClassName("propertyCard-priceValue")[0].InnerHtml;
-                var aTags = property.QuerySelector("a").Id;
-                if (!allINeed.ToLower().Contains("hotel")
-                    && !allINeed.ToLower().Contains("retirement")
-                    && !allINeed.ToLower().Contains("investment only")
-                    && !allINeed.ToLower().Contains("cash buyers only")
-                    && !allINeed.ToLower().Contains("shared ownership")
-                    && !allINeed.ToLower().Contains("share")) houses.Add(new House()
-                    {
-                        Area = address.ToString(),
-                        Link = $"https://www.rightmove.co.uk/properties/{aTags.Replace("prop", "")}#/?channel=RES_BUY",
-                        Price = pce
-                    });                
+                    //if (description.Any())
+                    //{
+                    //    if (description[0].GetElementsByTagName("title").Any())
+                    //    {
+                    //        description = description.GetElementsByTagName("title")[0];
+                    //    }
+                    //}
+                    
+
+                    var link = propertyCard.QuerySelector("a").Id;
+                    if (!propertyCard.InnerHtml.ToLower().Contains("hotel")
+                        && !propertyCard.InnerHtml.ToLower().Contains("retirement")
+                        && !propertyCard.InnerHtml.ToLower().Contains("investment only")
+                        && !propertyCard.InnerHtml.ToLower().Contains("cash buyers only")
+                        && !propertyCard.InnerHtml.ToLower().Contains("shared ownership")
+                        && !propertyCard.InnerHtml.ToLower().Contains("share")) houses.Add(new House()
+                        {
+                            Description = "",
+                            Price = propertyCard.GetElementsByClassName("propertyCard-priceValue")[0].InnerHtml,
+                            Area = propertyCard.GetElementsByClassName("propertyCard-address")[0].GetElementsByTagName("span")[0].InnerHtml,
+                            Images = propertyCard.GetElementsByTagName("img").Map(),
+                            Link = $"https://www.rightmove.co.uk/properties/{link.Replace("prop", "")}#/?channel=RES_BUY",
+
+                        });
+                }
+
+                return houses;
             }
-            return houses;
+            catch (Exception ex)
+            {
+                return houses;
+            }
+        }
+
+        private static List<string> Map(this IHtmlCollection<IElement> picsHtml)
+        {
+            List<string> images = new List<string>();
+            foreach (IHtmlImageElement pic in picsHtml)
+            {
+                images.Add(pic.Source);
+            }
+            return images;
         }
     }
 }

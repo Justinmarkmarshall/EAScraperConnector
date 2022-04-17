@@ -59,27 +59,46 @@ namespace EAScraperConnector.Tests
             var fakeDocument = await GetFakeDocument(Enums.EstateAgent.RightMove);
             _angleSharpWrapper?.Setup(r => r.GetSearchResults(It.IsAny<string>(), It.IsAny<RequesterWrapper>())).ReturnsAsync(fakeDocument);
             var zoo = await _rightMove.GetProperties("150000");
-            Assert.IsNotEmpty(zoo.Select(r => r.Link));
-            Assert.IsNotEmpty(zoo.Select(r => r.Area));
-            Assert.IsNotEmpty(zoo.Select(r => r.Description));
-            Assert.GreaterOrEqual(zoo.Count, 1);
-            Assert.IsNotNull(zoo.Select(r => r.Price));
-            Assert.IsNotNull(zoo.Select(r => r.MonthlyRepayments));
-            Assert.IsNotNull(zoo.Select(r => r.Deposit));
+            Assert.IsNotNull(zoo[0].Link);
+            Assert.IsNotNull(zoo[0].Area);
+            Assert.IsNotNull(zoo.Select(r => r.Images));
+
+            Assert.IsNotNull(zoo[0].Description);
+            //Assert.GreaterOrEqual(zoo.Count, 1);
+            //Assert.IsNotNull(zoo[0].Price);
+
+            Mock.Get(_auditWrapper.Object).Verify(x => x.SaveToDB(It.IsAny<Audit>()), Times.AtLeastOnce);
         }
 
-        private async Task<IDocument> GetFakeDocument(Enums.EstateAgent estateAgent)
+        [Test]
+        public async Task WhenScrapingV2ZooplaShouldPopulateHouseAndLogToAudit()
         {
-            var requesterMock = GetFakeRequesterMock(estateAgent);
+            var fakeElement = await GetFakeDocument(Enums.EstateAgent.Zoopla, 2);
+            _angleSharpWrapper?.Setup(r => r.GetSearchResults(It.IsAny<string>(), It.IsAny<RequesterWrapper>())).ReturnsAsync(fakeElement);
+            var zoo = await _zoopla.GetProperties("150000", true, 2);
+            Assert.IsNotNull(zoo[0].Link);
+            Assert.IsNotNull(zoo[0].Area);
+            Assert.IsNotNull(zoo.Select(r => r.Images));
+
+            Assert.IsNotNull(zoo[0].Description);
+            Assert.GreaterOrEqual(zoo.Count, 1);
+            Assert.IsNotNull(zoo[0].Price);
+
+            Mock.Get(_auditWrapper.Object).Verify(x => x.SaveToDB(It.IsAny<Audit>()), Times.AtLeastOnce);
+        }
+
+        private async Task<IDocument> GetFakeDocument(Enums.EstateAgent estateAgent, int version = 1)
+        {
+            var requesterMock = GetFakeRequesterMock(estateAgent, version);
             return await _angleSharpWrap.GetSearchResults("http://askjdkaj", requesterMock.Object);
         }
 
-        private Mock<RequesterWrapper> GetFakeRequesterMock(Enums.EstateAgent estateAgent)
+        private Mock<RequesterWrapper> GetFakeRequesterMock(Enums.EstateAgent estateAgent, int version = 1)
         {
             var mockResponse = new Mock<IResponse>();
             mockResponse.Setup(x => x.Address).Returns(new Url("fakeAddress"));
             mockResponse.Setup(x => x.Headers).Returns(new Dictionary<string, string>());
-            mockResponse.Setup(_ => _.Content).Returns(LoadFakeDocumentFromField(estateAgent));
+            mockResponse.Setup(_ => _.Content).Returns(LoadFakeDocumentFromField(estateAgent, version));
 
             var mockFakeRequester = new Mock<RequesterWrapper>();
             mockFakeRequester.Setup(_ => _.RequestAsync(It.IsAny<Request>(), It.IsAny<CancellationToken>())).ReturnsAsync(mockResponse.Object);
@@ -87,9 +106,16 @@ namespace EAScraperConnector.Tests
             return mockFakeRequester;
         }
 
-        private Stream LoadFakeDocumentFromField(Enums.EstateAgent estateAgent)
+        private Stream LoadFakeDocumentFromField(Enums.EstateAgent estateAgent, int version = 1)
         {
-            var doc = estateAgent == Enums.EstateAgent.RightMove ? "MockRMDocument.html" : "MockSearchResults.html";
+            var docName = estateAgent == Enums.EstateAgent.RightMove ? "MockRMDocument.html" : "v1/MockSearchResults.html";
+
+            if (version == 2)
+            {
+                docName = "v2/Zoopla.html";
+            }
+
+            var doc = $"TestHtmlDoc/{docName}";
 
             using (FileStream fileStream = File.OpenRead(Path.Combine(Directory.GetCurrentDirectory(), $"{doc}")))
             {

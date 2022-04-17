@@ -10,16 +10,23 @@
   <ItemGroup>
     <None Remove="MockRMDocument.html" />
     <None Remove="MockSearchResults.html" />
+    <None Remove="TestHtmlDoc\v2\Zoopla.html" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="MockSearchResults.html">
+    <EmbeddedResource Include="TestHtmlDoc\v2\Zoopla.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="TestHtmlDoc\v1\MockSearchResults.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="MockRMDocument.html">
+    <Content Include="TestHtmlDoc\MockRMDocument.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

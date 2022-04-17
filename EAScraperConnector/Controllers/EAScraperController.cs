@@ -51,14 +51,14 @@ namespace EAScraperConnector.Controllers
 
         [HttpGet]
         [Route("Scrape")]
-        public async Task<IEnumerable<House>> Scrape(string price)
+        public async Task<IEnumerable<House>> Scrape(string price, bool londonOnly)
         {
-            var rmResults = await _rightMoveScraper.GetProperties(price);
-            //var zoopResults = await _zooplaScraper.GetProperties(price);
+            var rmResults = await _rightMoveScraper.GetProperties(price, londonOnly);
+            var zoopResults = await _zooplaScraper.GetProperties(price, londonOnly, 2);
 
             var results = new List<House>();
             results.AddRange(rmResults);
-            //results.AddRange(zoopResults);
+            results.AddRange(zoopResults);
             return results;
         }
 

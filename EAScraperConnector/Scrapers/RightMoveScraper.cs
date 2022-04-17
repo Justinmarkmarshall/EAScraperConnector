@@ -65,9 +65,7 @@ namespace EAScraperConnector.Scrapers
         {
             var uniqueHouses = new List<House>();
 
-            var locations = londonOnly ? _londonPostCodes : _affordablePostCodes;
-
-            foreach (var location in locations)
+            foreach (var location in londonOnly ? _londonPostCodes : _affordablePostCodes)
             {
                 var postCodeCounter = 0;
                 string url = $"https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&locationIdentifier=OUTCODE%{location.Value}&insId=1&radius=10.0&minPrice={Calculate10PcOffPrice(Convert.ToInt32(price))}&maxPrice={price}&minBedrooms=0&maxBedrooms=1&displayPropertyType=flats&maxDaysSinceAdded=&_includeSSTC=on&sortByPriceDescending=&primaryDisplayPropertyType=&secondaryDisplayPropertyType=&oldDisplayPropertyType=&oldPrimaryDisplayPropertyType=&newHome=&auction=false";
@@ -76,8 +74,7 @@ namespace EAScraperConnector.Scrapers
                 var properties = searchResults[0].Children;
                 if (properties.Any())
                 {
-                    var newHomes = properties.MapRM();
-                    foreach (var home in newHomes)
+                    foreach (var home in properties.MapRM())
                     {
                         if (!uniqueHouses.Any(r => r.Link == home.Link))
                         {
